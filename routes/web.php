@@ -4,8 +4,7 @@ use Illuminate\Support\Facades\Route;
 
 Auth::routes();
 
-Route::get('/', 'HomeController@index')->name('index');
-
+Route::get('/', 'HomeController@index')->name('home');
 Route::get('profile/view', 'HomeController@viewprofile')->name('profile.view');
 Route::post('profile/save', 'HomeController@saveprofile')->name('profile.save');
 

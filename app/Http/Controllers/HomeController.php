@@ -9,10 +9,10 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
 
-use App\User;   
-use App\Profile;
-use App\Contact;
-use App\Address;
+use App\Models\User;   
+use App\Models\Profile;
+use App\Models\Contact;
+use App\Models\Address;
 
 class HomeController extends Controller
 {
