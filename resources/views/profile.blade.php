@@ -23,9 +23,13 @@
                 @csrf
                 <input type="hidden" name="id" value="{{ is_null($user->profile)? '' : $user->profile->user_id }}">
                 <div class="form-row">
-                    <div class="col-md-2">
-                        <img src="{{ is_null($user->profile)? asset('storage/image.jpg') : asset('storage/'.$user->profile->image) }}" 
+                    <div class="col-md-12">
+                        <img src="{{ (is_null($user->profile)||empty($user->profile->image))? asset('storage/photo.png') : asset('storage/'.$user->profile->image) }}" 
                         width="200" height="200" alt="profile_image">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="col-md-2">
                         <input type="hidden" name="profile_image_current" value="{{ is_null($user->profile)? '' : $user->profile->image }}">
                         <x-adminlte-input-file name="profile_image_new" label="Upload file" placeholder="Choose a file..." disable-feedback/>
                     </div>
@@ -45,7 +49,7 @@
                     </div>
                     <div class="col-md-2">
                         <x-adminlte-input name="suffix" label="Suffix" type="text" 
-                        required value="{{ is_null($user->profile)? '' : $user->profile->suffix}}"/>
+                         value="{{ is_null($user->profile)? '' : $user->profile->suffix}}"/>
                     </div>
                 </div>                
                 <hr>
@@ -84,7 +88,7 @@
                 </div>               
                 <hr>
                 <x-adminlte-button class="btn-sm" type="submit" label="Save" theme="primary" icon="fas fa-save"/>
-                <a href="{{ route('index') }}" class="btn btn-danger btn-sm"><i class="fas fa-backspace"></i> Cancel</a>
+                <a href="{{ route('home') }}" class="btn btn-danger btn-sm"><i class="fas fa-backspace"></i> Cancel</a>
             </form>
         </div>
     </div>

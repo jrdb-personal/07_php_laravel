@@ -21,9 +21,89 @@ class HomeController extends Controller
         $this->middleware('auth');
     }
 
-    public function index()
+    public function home()
     {
         return view('home');
+    }
+
+    public function profile(Request $request)
+    {
+        if (empty($request->all())){
+            $user = User::find(Auth::id());
+            $gender = $this->getDropDownJson('gender.json');
+            $nationality = $this->getDropDownJson('nationality.json');
+            
+            return view("profile", [
+                'user' => $user,
+                'gender' => $gender,
+                'nationality' => $nationality,
+            ]);
+        }
+        else {
+            $profile = new Profile();
+        $isValid = Validator::make(
+            $request->all(),
+            $profile->validationrules,
+            $profile->validationmessages,
+        );
+
+        if (!$isValid->fails()){
+            $photo_file = is_null($request->file('profile_image_new'))? null : $request->file('profile_image_new');
+            $photo_name = is_null($photo_file)? 
+            $request->profile_image_current : 
+            Auth::id().'_'.$request->first_name.'_'.$request->last_name.'.'.$photo_file->getClientOriginalExtension();
+            
+            //using User relationship with Profile record
+            if (is_null($request->id)){
+                $profile = new Profile();
+                $profile->user_id = Auth::id();
+                $profile->first_name = $request->first_name;
+                $profile->middle_name = $request->middle_name;
+                $profile->last_name = $request->last_name;
+                $profile->suffix = $request->suffix;
+                $profile->birthdate = $request->birthdate;
+                $profile->gender = $request->gender;
+                $profile->nationality = $request->nationality;
+                $profile->image = $photo_name;
+                $profile->save();
+            }
+            else {
+                $profile = User::find(Auth::id())->profile;
+                $profile->user_id = $request->id;
+                $profile->first_name = $request->first_name;
+                $profile->middle_name = $request->middle_name;
+                $profile->last_name = $request->last_name;
+                $profile->suffix = $request->suffix;
+                $profile->birthdate = $request->birthdate;
+                $profile->gender = $request->gender;
+                $profile->nationality = $request->nationality;
+                $profile->image = $photo_name;
+                $profile->save();
+
+                Log::info($profile->first_name."'s profiles was succesfully saved.");
+            }
+            if ($photo_file){
+                Storage::disk('local')->put($photo_name, $photo_file->get());
+            }
+
+            return redirect('profile/view')->withErrors($isValid);
+        }
+
+        else {
+            return redirect('profile/view')->withErrors($isValid);    
+        }
+        //using url
+        
+
+        Log::emergency($message);
+        Log::alert($message);
+        Log::critical($message);
+        Log::error($message);
+        Log::warning($message);
+        Log::notice($message);
+        Log::info($message);
+        Log::debug($message);
+        }
     }
 
     public function viewprofile()
@@ -31,11 +111,13 @@ class HomeController extends Controller
         $user = User::find(Auth::id());
         $gender = $this->getDropDownJson('gender.json');
         $nationality = $this->getDropDownJson('nationality.json');
+        
         return view("profile", [
             'user' => $user,
             'gender' => $gender,
             'nationality' => $nationality,
         ]);
+        
     }
 
     public function saveprofile(Request $request)

@@ -11,6 +11,7 @@
 
     URL GENERATING METHODS:<br>
     <ul>
+        
         <li><a href="@php echo url('profile/view'); @endphp"> 
             URL GENERATE USING url() METHOD</a>
         </li>
