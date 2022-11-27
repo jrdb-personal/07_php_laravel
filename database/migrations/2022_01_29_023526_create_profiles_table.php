@@ -16,7 +16,7 @@ class CreateProfilesTable extends Migration
             $table->string('last_name', 50);
             $table->string('middle_name', 50)->nullable($value = true);
             $table->string('suffix', 10)->nullable($value = true);
-            $table->date('birthdate');
+            $table->date('birth_date');
             $table->string('gender');
             $table->timestamps();
         });

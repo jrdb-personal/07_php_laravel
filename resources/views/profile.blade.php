@@ -19,9 +19,11 @@
                     </ul>
                 </div>
             @endif
-            <form method="post" action="{{ route('profile.save') }}" enctype="multipart/form-data">
+            <form method="post" action="{{ route('profile.save') }}" 
+                enctype="multipart/form-data">
                 @csrf
                 <input type="hidden" name="id" value="{{ is_null($user->profile)? '' : $user->profile->user_id }}">
+                
                 <div class="form-row">
                     <div class="col-md-12">
                         <img src="{{ (is_null($user->profile)||empty($user->profile->image))? asset('storage/photo.png') : asset('storage/'.$user->profile->image) }}" 
@@ -37,7 +39,7 @@
                 <div class="form-row">
                     <div class="col-md-2">
                         <x-adminlte-input name="first_name" label="First Name" type="text" 
-                        required value="{{ is_null($user->profile)? '' : $user->profile->first_name}}"/>
+                        required value="{{ is_null($user->profile)? '' : $user->profile->first_name}}"/> 
                     </div>
                     <div class="col-md-2">
                         <x-adminlte-input name="middle_name" label="Middle Name" type="text" 
@@ -56,7 +58,7 @@
                 <div class="row">
                     <div class="col-md-2">
                         <x-adminlte-input-date name="birthdate" placeholder="Choose a date..."
-                            label="Birthdate" required value="{{ is_null($user->profile)? '' : $user->profile->birthdate }}">
+                            label="Birthdate" required value="{{ is_null($user->profile)? '' : $user->profile->birth_date }}">
                             <x-slot name="appendSlot">
                                 <x-adminlte-button theme="default" icon="fas fa-calendar"
                                     title="Select Date"/>
@@ -84,7 +86,6 @@
                             @endforeach
                         </x-adminlte-select>
                     </div>
-                    
                 </div>               
                 <hr>
                 <x-adminlte-button class="btn-sm" type="submit" label="Save" theme="primary" icon="fas fa-save"/>

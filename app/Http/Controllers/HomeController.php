@@ -20,94 +20,18 @@ class HomeController extends Controller
     {
         $this->middleware('auth');
     }
-
     public function home()
     {
         return view('home');
     }
 
-    public function profile(Request $request)
+    public function index()
     {
-        if (empty($request->all())){
-            $user = User::find(Auth::id());
-            $gender = $this->getDropDownJson('gender.json');
-            $nationality = $this->getDropDownJson('nationality.json');
-            
-            return view("profile", [
-                'user' => $user,
-                'gender' => $gender,
-                'nationality' => $nationality,
-            ]);
-        }
-        else {
-            $profile = new Profile();
-        $isValid = Validator::make(
-            $request->all(),
-            $profile->validationrules,
-            $profile->validationmessages,
-        );
-
-        if (!$isValid->fails()){
-            $photo_file = is_null($request->file('profile_image_new'))? null : $request->file('profile_image_new');
-            $photo_name = is_null($photo_file)? 
-            $request->profile_image_current : 
-            Auth::id().'_'.$request->first_name.'_'.$request->last_name.'.'.$photo_file->getClientOriginalExtension();
-            
-            //using User relationship with Profile record
-            if (is_null($request->id)){
-                $profile = new Profile();
-                $profile->user_id = Auth::id();
-                $profile->first_name = $request->first_name;
-                $profile->middle_name = $request->middle_name;
-                $profile->last_name = $request->last_name;
-                $profile->suffix = $request->suffix;
-                $profile->birthdate = $request->birthdate;
-                $profile->gender = $request->gender;
-                $profile->nationality = $request->nationality;
-                $profile->image = $photo_name;
-                $profile->save();
-            }
-            else {
-                $profile = User::find(Auth::id())->profile;
-                $profile->user_id = $request->id;
-                $profile->first_name = $request->first_name;
-                $profile->middle_name = $request->middle_name;
-                $profile->last_name = $request->last_name;
-                $profile->suffix = $request->suffix;
-                $profile->birthdate = $request->birthdate;
-                $profile->gender = $request->gender;
-                $profile->nationality = $request->nationality;
-                $profile->image = $photo_name;
-                $profile->save();
-
-                Log::info($profile->first_name."'s profiles was succesfully saved.");
-            }
-            if ($photo_file){
-                Storage::disk('local')->put($photo_name, $photo_file->get());
-            }
-
-            return redirect('profile/view')->withErrors($isValid);
-        }
-
-        else {
-            return redirect('profile/view')->withErrors($isValid);    
-        }
-        //using url
-        
-
-        Log::emergency($message);
-        Log::alert($message);
-        Log::critical($message);
-        Log::error($message);
-        Log::warning($message);
-        Log::notice($message);
-        Log::info($message);
-        Log::debug($message);
-        }
+        return view('home');
     }
 
     public function viewprofile()
-    {
+    {        
         $user = User::find(Auth::id());
         $gender = $this->getDropDownJson('gender.json');
         $nationality = $this->getDropDownJson('nationality.json');
@@ -117,17 +41,41 @@ class HomeController extends Controller
             'gender' => $gender,
             'nationality' => $nationality,
         ]);
-        
     }
-
+    
     public function saveprofile(Request $request)
     {
-        $profile = new Profile();
+        $validationrules = [
+            'name' => 'required|unique:users|string|min:10|max:30',
+            'birthdate' => 'required|date',
+        ];
+        
+        $validationmessages = [
+            'name.required' => ':attribute is required',
+            'name.unique' => 'The value :input for :attribute already exists',
+            'birthdate.required' => ':attribute is required',
+            'birthdate.date' => ':attribute should be a valid date',
+        ];
+
+        //$profile = new Profile();
         $isValid = Validator::make(
             $request->all(),
-            $profile->validationrules,
-            $profile->validationmessages,
+            $validationrules,
+            $validationmessages,
         );
+
+        if ($isValid->fails()){
+            //redirect to form
+            return redirect('profile/view')->withErrors($isValid);
+            return redirect()->route('profile.view');
+            return redirect()->action('');
+        }
+        else {
+            return response($request->all())
+            ->header('Content-Type', 'application/pdf');
+
+            return response()->json($request->all());
+        }
 
         if (!$isValid->fails()){
             $photo_file = is_null($request->file('profile_image_new'))? null : $request->file('profile_image_new');
@@ -185,8 +133,40 @@ class HomeController extends Controller
         Log::notice($message);
         Log::info($message);
         Log::debug($message);
-
+        
     }
+
+    public function profile (Request $request)
+    {
+        //identify method from request object
+        if ($request->method() == 'post'){
+            $var = $request->only(['first_name', 'last_name']);
+            varvar_dump($var);
+            return $request->method(); 
+        }
+        else {
+             //filter values coming from request object
+            $var = $request->only(['first_name', 'last_name']);
+
+            $var = $request->except(['birthdate', 'gender']);
+ 
+            var_dump($var);
+            return $request->method();
+
+            if ($request->has(['first_name', 'gender']))
+            {
+                    
+            }
+        }
+    }
+
+
+
+
+
+
+
+
 
     public function viewcontact()
     {
@@ -279,7 +259,8 @@ class HomeController extends Controller
 
     public function getDropDownJson($file_name)
     {
-        $lists = Storage::disk('json')->exists($file_name)? Storage::disk('json')->get($file_name) : '';
+        $lists = Storage::disk('json')->exists($file_name)? 
+        Storage::disk('json')->get($file_name) : '';
         return json_decode($lists, true);
     }
 }
