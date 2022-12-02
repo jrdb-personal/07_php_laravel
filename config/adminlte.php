@@ -250,7 +250,7 @@ return [
         ],
         [
             'text' => 'My Contacts',
-            'url'  => 'contact/view/',
+            'url'  => 'contact/list/',
             'icon' => 'fas fa-phone',
             'icon_color' => 'green',
         ],

@@ -9,7 +9,8 @@ class UpdateProfilesTableImage extends Migration
     public function up()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            $table->string('image')->default('image.jpg');;
+            $table->string('image')->default('image.jpg');
+            $table->softDeletes();
         });
     }
 
@@ -17,6 +18,7 @@ class UpdateProfilesTableImage extends Migration
     {
         Schema::table('profiles', function (Blueprint $table) {
             $table->dropColumn('image');
+            $table->dropSoftDeletes();
         });
     }
 }

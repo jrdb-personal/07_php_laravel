@@ -22,24 +22,29 @@
             <form method="post" action="{{ route('profile.save') }}" 
                 enctype="multipart/form-data">
                 @csrf
-                <input type="hidden" name="id" value="{{ is_null($user->profile)? '' : $user->profile->user_id }}">
+                <input type="hidden" name="id" 
+                value="{{ is_null($user->profile)? '' : $user->profile->id }}">
                 
                 <div class="form-row">
                     <div class="col-md-12">
-                        <img src="{{ (is_null($user->profile)||empty($user->profile->image))? asset('storage/photo.png') : asset('storage/'.$user->profile->image) }}" 
+                        <img src="{{ (is_null($user->profile)||empty($user->profile->photo))? 
+                            asset('storage/photo.png') : asset('storage/'.$user->profile->photo) }}" 
                         width="200" height="200" alt="profile_image">
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-2">
-                        <input type="hidden" name="profile_image_current" value="{{ is_null($user->profile)? '' : $user->profile->image }}">
-                        <x-adminlte-input-file name="profile_image_new" label="Upload file" placeholder="Choose a file..." disable-feedback/>
+                        <input type="hidden" name="profile_image_current" 
+                        value="{{ is_null($user->profile)? '' : $user->profile->image }}">
+                        <x-adminlte-input-file name="profile_image_new" label="Upload file" 
+                        placeholder="Choose a file..." disable-feedback/>
                     </div>
                 </div>
                 <div class="form-row">
                     <div class="col-md-2">
                         <x-adminlte-input name="first_name" label="First Name" type="text" 
-                        required value="{{ is_null($user->profile)? '' : $user->profile->first_name}}"/> 
+                        required 
+                        value="{{ is_null($user->profile)? '' : $user->profile->first_name}}"/> 
                     </div>
                     <div class="col-md-2">
                         <x-adminlte-input name="middle_name" label="Middle Name" type="text" 
@@ -56,8 +61,11 @@
                 </div>                
                 <hr>
                 <div class="row">
+                @php
+                    $config = ['format' => 'YYYY-MM-DD'];
+                @endphp
                     <div class="col-md-2">
-                        <x-adminlte-input-date name="birthdate" placeholder="Choose a date..."
+                        <x-adminlte-input-date name="birth_date" placeholder="Choose a date..."
                             label="Birthdate" required value="{{ is_null($user->profile)? '' : $user->profile->birth_date }}">
                             <x-slot name="appendSlot">
                                 <x-adminlte-button theme="default" icon="fas fa-calendar"
@@ -69,7 +77,8 @@
                         <x-adminlte-select name="gender" label="Gender">
                             <option>Select</option>
                             @foreach ($gender as $g)
-                                <option value="{{ $g }}" {{ !is_null($user->profile) && ($user->profile->gender == $g)? 'selected' : '' }}>
+                                <option value="{{ $g }}" 
+                                {{ !is_null($user->profile) && ($user->profile->gender == $g)? 'selected' : '' }}>
                                     {{ $g }}
                                 </option>
                             @endforeach
@@ -80,7 +89,7 @@
                         <x-adminlte-select name="nationality" label="Nationality">
                             <option>Select</option>
                             @foreach ($nationality as $n)
-                            <option value="{{ $n }}" {{!is_array($user->profile) && ($user->profile->nationality == $n)? 'selected' : '' }}>
+                            <option value="{{ $n }}" {{!is_null($user->profile) && ($user->profile->nationality == $n)? 'selected' : '' }}>
                                     {{ $n }}
                             </option>
                             @endforeach

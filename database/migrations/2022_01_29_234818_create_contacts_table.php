@@ -9,13 +9,14 @@ class CreateContactsTable extends Migration
     public function up()
     {
         Schema::create('contacts', function (Blueprint $table) {
-            $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->unsignedMediumInteger('user_id');
+            $table->unsignedBigInteger('id')->autoIncrement();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
-            $table->string('mobile', 50);
-            $table->string('landline', 50);
-            $table->string('alternate_email',50)->nullable($value=true);
+            $table->string('contact_type', 50);
+            $table->boolean('primary');
+            $table->number(string,30);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

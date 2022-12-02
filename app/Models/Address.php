@@ -3,13 +3,16 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Address extends Model
 {
-    protected $table = "address";
+    use HasFactory;
+    use SoftDeletes;
     
     protected $fillable = [
-        'address_type', 'addres', 'municipality', 'region', 'region',
+        'address_type', 'address', 'primary', 'municipality', 'region', 'zip_code',
     ];
 
     public function user()

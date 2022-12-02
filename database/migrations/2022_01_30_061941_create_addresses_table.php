@@ -4,20 +4,22 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAddressTable extends Migration
+class CreateAddressesTable extends Migration
 {
     public function up()
     {
-        Schema::create('address', function (Blueprint $table) {
-            $table->unsignedMediumInteger('id')->autoIncrement();
-            $table->unsignedMediumInteger('user_id');
+        Schema::create('addressess', function (Blueprint $table) {
+            $table->unsignedBigInteger('id')->autoIncrement();
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')->references('id')->on('users');
             $table->string('address_type',10);
+            $table->boolean('primary');
             $table->string('address');
-            $table->string('municipality',30);
-            $table->string('region',30);
-            $table->unsignedMediumInteger('zip_code');
+            $table->string('municipality',50);
+            $table->string('region',50);
+            $table->string('zip_code',30);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

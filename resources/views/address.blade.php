@@ -75,7 +75,7 @@
                 <hr>
                 <x-adminlte-button class="btn-sm" type="submit" label="Save" 
                 theme="primary" icon="fas fa-save"/>
-                <a href="{{ route('addresses.list') }}" class="btn btn-danger btn-sm">
+                <a href="{{ route('address.list') }}" class="btn btn-danger btn-sm">
                 <i class="fas fa-backspace"></i> Cancel</a>
             </form>
         </div>

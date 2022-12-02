@@ -1,9 +1,8 @@
 <?php
-
 namespace Database\Seeders;
-
 use Illuminate\Database\Seeder;
-use App\User;
+use App\Models\User;
+use App\Models\Profile;
 
 class UserSeeder extends Seeder
 {
@@ -17,7 +16,10 @@ class UserSeeder extends Seeder
         ]); 
         */
         
-        User::factory()->count(1)->create();
-        //factory(User::class, 2)->create();
+        User::factory()
+                ->has(
+                    Profile::factory()->count(1)
+                )        
+                ->create();
     }
 }

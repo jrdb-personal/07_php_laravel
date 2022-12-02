@@ -23,7 +23,9 @@
             </tr>
                 @forelse ($addresses as $address)
                     <tr>
+                        <td>{{ $address->id }}</td>
                         <td>{{ $address->address_type }}</td>
+                        <td>{{ ($address->primary == 1)? 'Primary' : '' }}</td>
                         <td>{{ $address->address }}</td>
                         <td>{{ $address->municipality }}</td>
                         <td>{{ $address->region }}</td>
@@ -36,12 +38,17 @@
                 @empty
                     <tr><td colspan="5">There are no Address records found in the system</td></tr>
                 @endforelse
-                </table>
+        </table>
+        <nav aria-label="...">
+            <ul class="pagination">
                 {{ $addresses->links() }}
-                <a href="{{ route('addresses.view') }}" class="btn btn-primary btn-sm">
-                <i class="fas fa-map-marked-alt"></i> New Address Record</a>  
-                <a href="{{ route('index') }}" class="btn btn-danger btn-sm">
-                <i class="fas fa-backspace"></i> Cancel</a>
+            </ul>
+        </nav>
+                
+        <a href="{{ route('addresses.view') }}" class="btn btn-primary btn-sm">
+        <i class="fas fa-map-marked-alt"></i> New Address Record</a>  
+        <a href="{{ route('index') }}" class="btn btn-danger btn-sm">
+        <i class="fas fa-backspace"></i> Cancel</a>
         </div>
     </div>
 @stop

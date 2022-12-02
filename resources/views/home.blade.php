@@ -18,7 +18,7 @@
         <li><a href="@php echo route('profile.view'); @endphp"> 
             URL GENERATE USING route() METHOD</a>
         </li>
-        <li><a href="@php echo action('HomeController@viewprofile'); @endphp"> 
+        <li><a href="@php echo action('ProfileController@viewprofile'); @endphp"> 
             URL GENERATE USING action() METHOD</a>
         </li>
     </ul>

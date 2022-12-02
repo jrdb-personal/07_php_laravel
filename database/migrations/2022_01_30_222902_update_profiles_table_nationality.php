@@ -9,7 +9,8 @@ class UpdateProfilesTable extends Migration
     public function up()
     {
         Schema::table('profiles', function (Blueprint $table) {
-            $table->string('nationality')->nullable($value = true);;
+            $table->string('nationality')->nullable($value = true);
+            
         });
     }
 
